@@ -1,177 +1,257 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Idea Generator — TheAIcraftify</title>
-  <meta name="description" content="Describe your business problem and get an instant AI-style concept breakdown: solution idea, features, audience, tech stack, earning model and roadmap." />
+const form = document.getElementById("ideaForm");
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+const businessType = document.getElementById("businessType");
+const problem = document.getElementById("problem");
+const customers = document.getElementById("customers");
 
-  <link rel="stylesheet" href="styles.css" />
+const loadingPanel = document.getElementById("loadingPanel");
+const resultsPanel = document.getElementById("resultsPanel");
 
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%230B0D10%22/><text x=%2250%22 y=%2266%22 font-size=%2258%22 font-family=%22monospace%22 fill=%22%236E8FFF%22 text-anchor=%22middle%22>A</text></svg>" />
-</head>
-<body>
+const resSolution = document.getElementById("resSolution");
+const resFeatures = document.getElementById("resFeatures");
+const resAudience = document.getElementById("resAudience");
+const resTech = document.getElementById("resTech");
+const resEarning = document.getElementById("resEarning");
+const resRoadmap = document.getElementById("resRoadmap");
 
-  <!-- Same faint blueprint-grid background used across TheAIcraftify -->
-  <div class="blueprint-grid" aria-hidden="true"></div>
+const regenerateBtn = document.getElementById("regenerateBtn");
+const newIdeaBtn = document.getElementById("newIdeaBtn");
 
-  <!-- ============================================
-       HEADER
-  ============================================ -->
-  <header class="app-header">
-    <div class="app-header-inner">
-      <span class="brand-mark">
-        <span class="brand-mark-icon">&lt;/&gt;</span>
-        The<span class="accent-text">AI</span>craftify
-      </span>
-      <span class="app-name">AI Idea Generator</span>
-    </div>
-  </header>
+function makeIdea(type, problemText, customerText) {
+    const typeLower = type.toLowerCase();
 
-  <main class="app-main">
+    let solution = `A smart digital solution for ${type} that helps solve "${problemText}" and makes the business easier to manage and grow.`;
 
-    <!-- ============================================
-         INTRO
-    ============================================ -->
-    <section class="intro">
-      <div class="status-badge">
-        <span class="status-dot"></span>
-        Demo Mode &bull; Rule-Based Generator &bull; No Paid API
-      </div>
-      <h1 class="intro-title">Describe your idea. Get an instant concept.</h1>
-      <p class="intro-sub">
-        Fill in three quick details about a business problem, and this tool
-        will assemble a starter concept: a solution idea, core features,
-        target audience, suggested tech, an earning model, and a simple
-        roadmap to build it.
-      </p>
-    </section>
+    let features = [
+        `Simple dashboard designed for ${type}`,
+        `Easy management of the main business activities`,
+        `Customer-friendly interface and quick actions`,
+        `Automatic reminders and follow-ups`,
+        `Simple reports to track business performance`
+    ];
 
-    <!-- ============================================
-         INPUT FORM
-    ============================================ -->
-    <section class="form-panel">
-      <form id="ideaForm" novalidate>
+    let technology = [
+        "HTML, CSS and JavaScript",
+        "Responsive design for mobile and desktop",
+        "Local storage for basic data saving",
+        "GitHub Pages for free hosting"
+    ];
 
-        <div class="field">
-          <label for="businessType">1. Business type</label>
-          <input
-            type="text"
-            id="businessType"
-            name="businessType"
-            placeholder="e.g. local bakery, tutoring service, online clothing store"
-            autocomplete="off"
-          />
-          <span class="field-error" id="err-businessType">Please enter a business type.</span>
-        </div>
+    let earning = [
+        "Offer the solution as a paid service to businesses",
+        "Freemium model with optional premium features",
+        "Monthly subscription for advanced tools"
+    ];
 
-        <div class="field">
-          <label for="problem">2. Problem you want to solve</label>
-          <input
-            type="text"
-            id="problem"
-            name="problem"
-            placeholder="e.g. too many repeated customer questions"
-            autocomplete="off"
-          />
-          <span class="field-error" id="err-problem">Please describe the problem.</span>
-        </div>
+    let roadmap = [
+        `Define the main workflow for the ${type} business`,
+        "Build the basic interface in HTML and CSS",
+        "Add JavaScript functionality",
+        "Test the solution with real business examples",
+        "Add data storage and advanced features",
+        "Deploy the working version online"
+    ];
 
-        <div class="field">
-          <label for="customers">3. Target customers</label>
-          <input
-            type="text"
-            id="customers"
-            name="customers"
-            placeholder="e.g. busy parents, small shop owners, college students"
-            autocomplete="off"
-          />
-          <span class="field-error" id="err-customers">Please describe your target customers.</span>
-        </div>
+    if (
+        typeLower.includes("restaurant") ||
+        typeLower.includes("cafe") ||
+        typeLower.includes("food") ||
+        typeLower.includes("bakery") ||
+        typeLower.includes("catering")
+    ) {
+        features = [
+            "Digital menu and product management",
+            "Order and customer management",
+            "Order status and follow-up system",
+            "Daily sales summary",
+            "Customer history and repeat-order tracking"
+        ];
+    }
 
-        <button type="submit" class="btn btn-primary btn-full" id="generateBtn">
-          Generate Idea
-        </button>
-      </form>
-    </section>
+    else if (
+        typeLower.includes("school") ||
+        typeLower.includes("academy") ||
+        typeLower.includes("tutor") ||
+        typeLower.includes("education") ||
+        typeLower.includes("coaching")
+    ) {
+        features = [
+            "Student and teacher management",
+            "Attendance tracking",
+            "Class and timetable management",
+            "Fee and payment reminders",
+            "Progress and performance reports"
+        ];
+    }
 
-    <!-- ============================================
-         LOADING STATE
-         Shown briefly after tapping Generate, purely for feel —
-         all the "thinking" happens instantly, this just paces it.
-    ============================================ -->
-    <section class="loading-panel" id="loadingPanel" hidden>
-      <div class="loading-dots"><span></span><span></span><span></span></div>
-      <p class="loading-text">Assembling your concept...</p>
-    </section>
+    else if (
+        typeLower.includes("hospital") ||
+        typeLower.includes("clinic") ||
+        typeLower.includes("doctor") ||
+        typeLower.includes("medical")
+    ) {
+        features = [
+            "Patient information management",
+            "Appointment scheduling",
+            "Automatic appointment reminders",
+            "Patient history",
+            "Simple daily activity dashboard"
+        ];
+    }
 
-    <!-- ============================================
-         RESULTS
-    ============================================ -->
-    <section class="results-panel" id="resultsPanel" hidden>
+    else if (
+        typeLower.includes("salon") ||
+        typeLower.includes("beauty") ||
+        typeLower.includes("spa") ||
+        typeLower.includes("barber")
+    ) {
+        features = [
+            "Appointment booking",
+            "Customer profile management",
+            "Service and price management",
+            "Automatic appointment reminders",
+            "Sales and customer history"
+        ];
+    }
 
-      <div class="results-header">
-        <p class="eyebrow">// generated concept</p>
-        <h2 class="results-title" id="resultHeading">Your Idea Concept</h2>
-      </div>
+    else if (
+        typeLower.includes("shop") ||
+        typeLower.includes("store") ||
+        typeLower.includes("retail")
+    ) {
+        features = [
+            "Product and inventory management",
+            "Customer management",
+            "Sales tracking",
+            "Low-stock reminders",
+            "Daily and monthly sales reports"
+        ];
+    }
 
-      <div class="result-grid">
+    else if (
+        typeLower.includes("real estate") ||
+        typeLower.includes("property")
+    ) {
+        features = [
+            "Property listing management",
+            "Customer inquiry tracking",
+            "Property search and filtering",
+            "Viewing appointment management",
+            "Lead and follow-up reminders"
+        ];
+    }
 
-        <article class="result-card result-card-wide">
-          <span class="result-icon">&#9889;</span>
-          <h3>AI Solution Idea</h3>
-          <p id="resSolution"></p>
-        </article>
+    else if (
+        typeLower.includes("travel") ||
+        typeLower.includes("tour") ||
+        typeLower.includes("tourism")
+    ) {
+        features = [
+            "Trip and package management",
+            "Customer booking management",
+            "Travel itinerary creation",
+            "Payment and booking tracking",
+            "Customer follow-up reminders"
+        ];
+    }
 
-        <article class="result-card">
-          <span class="result-icon">&#9673;</span>
-          <h3>Main Features</h3>
-          <ul id="resFeatures" class="result-list"></ul>
-        </article>
+    else if (
+        typeLower.includes("gym") ||
+        typeLower.includes("fitness")
+    ) {
+        features = [
+            "Member management",
+            "Membership expiry reminders",
+            "Workout and progress tracking",
+            "Payment tracking",
+            "Member attendance history"
+        ];
+    }
 
-        <article class="result-card">
-          <span class="result-icon">&#9733;</span>
-          <h3>Target Audience</h3>
-          <p id="resAudience"></p>
-        </article>
+    else if (
+        typeLower.includes("freelance") ||
+        typeLower.includes("agency") ||
+        typeLower.includes("consult")
+    ) {
+        features = [
+            "Client management",
+            "Project and task tracking",
+            "Deadline reminders",
+            "Invoice and payment tracking",
+            "Client communication history"
+        ];
+    }
 
-        <article class="result-card">
-          <span class="result-icon">&lt;/&gt;</span>
-          <h3>Suggested Technology</h3>
-          <ul id="resTech" class="result-list"></ul>
-        </article>
+    return {
+        solution,
+        features,
+        audience: `Designed for ${customerText || "customers and users of this business"} who regularly interact with ${type}.`,
+        technology,
+        earning,
+        roadmap
+    };
+}
 
-        <article class="result-card">
-          <span class="result-icon">$</span>
-          <h3>Possible Earning Model</h3>
-          <ul id="resEarning" class="result-list"></ul>
-        </article>
+function showList(element, items) {
+    element.innerHTML = "";
 
-        <article class="result-card result-card-wide">
-          <span class="result-icon">&#8987;</span>
-          <h3>Simple Development Roadmap</h3>
-          <ol id="resRoadmap" class="result-list result-list-numbered"></ol>
-        </article>
+    items.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        element.appendChild(li);
+    });
+}
 
-      </div>
+function generateIdea() {
+    const type = businessType.value.trim();
+    const problemText = problem.value.trim();
+    const customerText = customers.value.trim();
 
-      <div class="results-actions">
-        <button type="button" class="btn btn-ghost" id="regenerateBtn">Generate Another Version</button>
-        <button type="button" class="btn btn-ghost" id="newIdeaBtn">Start a New Idea</button>
-      </div>
-    </section>
+    if (!type || !problemText || !customerText) {
+        return;
+    }
 
-  </main>
+    loadingPanel.hidden = false;
+    resultsPanel.hidden = true;
 
-  <footer class="app-footer">
-    <p>Part of <span class="accent-text">TheAIcraftify</span> &mdash; Project 01</p>
-  </footer>
+    setTimeout(() => {
+        const idea = makeIdea(type, problemText, customerText);
 
-  <script src="script.js"></script>
-</body>
-</html>
+        resSolution.textContent = idea.solution;
+        resAudience.textContent = idea.audience;
 
+        showList(resFeatures, idea.features);
+        showList(resTech, idea.technology);
+        showList(resEarning, idea.earning);
+        showList(resRoadmap, idea.roadmap);
+
+        loadingPanel.hidden = true;
+        resultsPanel.hidden = false;
+
+        resultsPanel.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }, 700);
+}
+
+form.addEventListener("submit", function(event) {
+    event.preventDefault();
+    generateIdea();
+});
+
+regenerateBtn.addEventListener("click", function() {
+    generateIdea();
+});
+
+newIdeaBtn.addEventListener("click", function() {
+    form.reset();
+
+    resultsPanel.hidden = true;
+    loadingPanel.hidden = true;
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+});
