@@ -1,257 +1,224 @@
-const form = document.getElementById("ideaForm");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-const businessType = document.getElementById("businessType");
-const problem = document.getElementById("problem");
-const customers = document.getElementById("customers");
+  <title>AI Idea Generator - TheAICraftify</title>
 
-const loadingPanel = document.getElementById("loadingPanel");
-const resultsPanel = document.getElementById("resultsPanel");
-
-const resSolution = document.getElementById("resSolution");
-const resFeatures = document.getElementById("resFeatures");
-const resAudience = document.getElementById("resAudience");
-const resTech = document.getElementById("resTech");
-const resEarning = document.getElementById("resEarning");
-const resRoadmap = document.getElementById("resRoadmap");
-
-const regenerateBtn = document.getElementById("regenerateBtn");
-const newIdeaBtn = document.getElementById("newIdeaBtn");
-
-function makeIdea(type, problemText, customerText) {
-    const typeLower = type.toLowerCase();
-
-    let solution = `A smart digital solution for ${type} that helps solve "${problemText}" and makes the business easier to manage and grow.`;
-
-    let features = [
-        `Simple dashboard designed for ${type}`,
-        `Easy management of the main business activities`,
-        `Customer-friendly interface and quick actions`,
-        `Automatic reminders and follow-ups`,
-        `Simple reports to track business performance`
-    ];
-
-    let technology = [
-        "HTML, CSS and JavaScript",
-        "Responsive design for mobile and desktop",
-        "Local storage for basic data saving",
-        "GitHub Pages for free hosting"
-    ];
-
-    let earning = [
-        "Offer the solution as a paid service to businesses",
-        "Freemium model with optional premium features",
-        "Monthly subscription for advanced tools"
-    ];
-
-    let roadmap = [
-        `Define the main workflow for the ${type} business`,
-        "Build the basic interface in HTML and CSS",
-        "Add JavaScript functionality",
-        "Test the solution with real business examples",
-        "Add data storage and advanced features",
-        "Deploy the working version online"
-    ];
-
-    if (
-        typeLower.includes("restaurant") ||
-        typeLower.includes("cafe") ||
-        typeLower.includes("food") ||
-        typeLower.includes("bakery") ||
-        typeLower.includes("catering")
-    ) {
-        features = [
-            "Digital menu and product management",
-            "Order and customer management",
-            "Order status and follow-up system",
-            "Daily sales summary",
-            "Customer history and repeat-order tracking"
-        ];
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    else if (
-        typeLower.includes("school") ||
-        typeLower.includes("academy") ||
-        typeLower.includes("tutor") ||
-        typeLower.includes("education") ||
-        typeLower.includes("coaching")
-    ) {
-        features = [
-            "Student and teacher management",
-            "Attendance tracking",
-            "Class and timetable management",
-            "Fee and payment reminders",
-            "Progress and performance reports"
-        ];
+    body {
+      font-family: Arial, sans-serif;
+      background: #0b0d10;
+      color: #f2f5f7;
+      min-height: 100vh;
+      line-height: 1.6;
     }
 
-    else if (
-        typeLower.includes("hospital") ||
-        typeLower.includes("clinic") ||
-        typeLower.includes("doctor") ||
-        typeLower.includes("medical")
-    ) {
-        features = [
-            "Patient information management",
-            "Appointment scheduling",
-            "Automatic appointment reminders",
-            "Patient history",
-            "Simple daily activity dashboard"
-        ];
+    .container {
+      width: min(920px, 92%);
+      margin: auto;
     }
 
-    else if (
-        typeLower.includes("salon") ||
-        typeLower.includes("beauty") ||
-        typeLower.includes("spa") ||
-        typeLower.includes("barber")
-    ) {
-        features = [
-            "Appointment booking",
-            "Customer profile management",
-            "Service and price management",
-            "Automatic appointment reminders",
-            "Sales and customer history"
-        ];
+    header {
+      padding: 22px 0;
+      border-bottom: 1px solid #252a31;
     }
 
-    else if (
-        typeLower.includes("shop") ||
-        typeLower.includes("store") ||
-        typeLower.includes("retail")
-    ) {
-        features = [
-            "Product and inventory management",
-            "Customer management",
-            "Sales tracking",
-            "Low-stock reminders",
-            "Daily and monthly sales reports"
-        ];
+    .brand {
+      font-size: 22px;
+      font-weight: bold;
+      color: #ffffff;
     }
 
-    else if (
-        typeLower.includes("real estate") ||
-        typeLower.includes("property")
-    ) {
-        features = [
-            "Property listing management",
-            "Customer inquiry tracking",
-            "Property search and filtering",
-            "Viewing appointment management",
-            "Lead and follow-up reminders"
-        ];
+    .brand span {
+      color: #6ee7ff;
     }
 
-    else if (
-        typeLower.includes("travel") ||
-        typeLower.includes("tour") ||
-        typeLower.includes("tourism")
-    ) {
-        features = [
-            "Trip and package management",
-            "Customer booking management",
-            "Travel itinerary creation",
-            "Payment and booking tracking",
-            "Customer follow-up reminders"
-        ];
+    .hero {
+      padding: 55px 0 30px;
+      text-align: center;
     }
 
-    else if (
-        typeLower.includes("gym") ||
-        typeLower.includes("fitness")
-    ) {
-        features = [
-            "Member management",
-            "Membership expiry reminders",
-            "Workout and progress tracking",
-            "Payment tracking",
-            "Member attendance history"
-        ];
+    .badge {
+      display: inline-block;
+      padding: 7px 13px;
+      border: 1px solid #303943;
+      border-radius: 30px;
+      color: #6ee7ff;
+      font-size: 13px;
+      margin-bottom: 18px;
     }
 
-    else if (
-        typeLower.includes("freelance") ||
-        typeLower.includes("agency") ||
-        typeLower.includes("consult")
-    ) {
-        features = [
-            "Client management",
-            "Project and task tracking",
-            "Deadline reminders",
-            "Invoice and payment tracking",
-            "Client communication history"
-        ];
+    h1 {
+      font-size: clamp(32px, 6vw, 58px);
+      line-height: 1.05;
+      margin-bottom: 18px;
     }
 
-    return {
-        solution,
-        features,
-        audience: `Designed for ${customerText || "customers and users of this business"} who regularly interact with ${type}.`,
-        technology,
-        earning,
-        roadmap
-    };
-}
-
-function showList(element, items) {
-    element.innerHTML = "";
-
-    items.forEach(item => {
-        const li = document.createElement("li");
-        li.textContent = item;
-        element.appendChild(li);
-    });
-}
-
-function generateIdea() {
-    const type = businessType.value.trim();
-    const problemText = problem.value.trim();
-    const customerText = customers.value.trim();
-
-    if (!type || !problemText || !customerText) {
-        return;
+    .hero p {
+      color: #9ba5af;
+      max-width: 680px;
+      margin: auto;
     }
 
-    loadingPanel.hidden = false;
-    resultsPanel.hidden = true;
+    .card {
+      background: #12161b;
+      border: 1px solid #283039;
+      border-radius: 18px;
+      padding: 25px;
+      margin: 25px 0;
+    }
 
-    setTimeout(() => {
-        const idea = makeIdea(type, problemText, customerText);
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
 
-        resSolution.textContent = idea.solution;
-        resAudience.textContent = idea.audience;
+    .field {
+      margin-bottom: 20px;
+    }
 
-        showList(resFeatures, idea.features);
-        showList(resTech, idea.technology);
-        showList(resEarning, idea.earning);
-        showList(resRoadmap, idea.roadmap);
+    input,
+    textarea {
+      width: 100%;
+      background: #0c1014;
+      color: #ffffff;
+      border: 1px solid #303943;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 16px;
+      outline: none;
+    }
 
-        loadingPanel.hidden = true;
-        resultsPanel.hidden = false;
+    textarea {
+      min-height: 105px;
+      resize: vertical;
+    }
 
-        resultsPanel.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
-    }, 700);
-}
+    input:focus,
+    textarea:focus {
+      border-color: #6ee7ff;
+    }
 
-form.addEventListener("submit", function(event) {
-    event.preventDefault();
-    generateIdea();
-});
+    button {
+      width: 100%;
+      padding: 15px;
+      border: 0;
+      border-radius: 10px;
+      background: #6ee7ff;
+      color: #071014;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-regenerateBtn.addEventListener("click", function() {
-    generateIdea();
-});
+    button:hover {
+      opacity: 0.9;
+    }
 
-newIdeaBtn.addEventListener("click", function() {
-    form.reset();
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 25px;
+      color: #6ee7ff;
+    }
 
-    resultsPanel.hidden = true;
-    loadingPanel.hidden = true;
+    .results {
+      display: none;
+    }
 
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-});
+    .result-title {
+      color: #6ee7ff;
+      margin-bottom: 10px;
+    }
+
+    .solution {
+      font-size: 18px;
+      color: #e9eef2;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .result-box {
+      background: #0d1115;
+      border: 1px solid #283039;
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .result-box h3 {
+      margin-bottom: 12px;
+      color: #ffffff;
+    }
+
+    ul,
+    ol {
+      padding-left: 20px;
+      color: #b9c2ca;
+    }
+
+    li {
+      margin-bottom: 7px;
+    }
+
+    .wide {
+      grid-column: 1 / -1;
+    }
+
+    .secondary {
+      margin-top: 12px;
+      background: transparent;
+      color: #6ee7ff;
+      border: 1px solid #303943;
+    }
+
+    footer {
+      text-align: center;
+      padding: 35px 0;
+      color: #68727c;
+      font-size: 13px;
+    }
+
+    @media (max-width: 700px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .wide {
+        grid-column: auto;
+      }
+
+      .hero {
+        padding-top: 35px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="container">
+      <div class="brand">
+        <span>AI</span>craftify
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="hero">
+     
