@@ -1,224 +1,907 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>AI Idea Generator - TheAICraftify</title>
+<title>AI Idea Generator - TheAIcraftify</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #0b0d10;
-      color: #f2f5f7;
-      min-height: 100vh;
-      line-height: 1.6;
-    }
+body {
+  font-family: Arial, sans-serif;
+  background: #080a0f;
+  color: #f2f5f7;
+  min-height: 100vh;
+  line-height: 1.6;
+}
 
-    .container {
-      width: min(920px, 92%);
-      margin: auto;
-    }
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(100,120,150,.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100,120,150,.07) 1px, transparent 1px);
+  background-size: 86px 86px;
+  pointer-events: none;
+  z-index: -1;
+}
 
-    header {
-      padding: 22px 0;
-      border-bottom: 1px solid #252a31;
-    }
+.container {
+  width: min(920px, 92%);
+  margin: auto;
+}
 
-    .brand {
-      font-size: 22px;
-      font-weight: bold;
-      color: #ffffff;
-    }
+/* HEADER */
 
-    .brand span {
-      color: #6ee7ff;
-    }
+header {
+  border-bottom: 1px solid #252a31;
+  padding: 22px 0;
+}
 
-    .hero {
-      padding: 55px 0 30px;
-      text-align: center;
-    }
+.brand {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffffff;
+}
 
-    .badge {
-      display: inline-block;
-      padding: 7px 13px;
-      border: 1px solid #303943;
-      border-radius: 30px;
-      color: #6ee7ff;
-      font-size: 13px;
-      margin-bottom: 18px;
-    }
+.brand span {
+  color: #6ee7ff;
+}
 
-    h1 {
-      font-size: clamp(32px, 6vw, 58px);
-      line-height: 1.05;
-      margin-bottom: 18px;
-    }
+/* HERO */
 
-    .hero p {
-      color: #9ba5af;
-      max-width: 680px;
-      margin: auto;
-    }
+.hero {
+  text-align: center;
+  padding: 55px 0 30px;
+}
 
-    .card {
-      background: #12161b;
-      border: 1px solid #283039;
-      border-radius: 18px;
-      padding: 25px;
-      margin: 25px 0;
-    }
+.badge {
+  display: inline-block;
+  padding: 8px 16px;
+  border: 1px solid #303943;
+  border-radius: 30px;
+  color: #6ee7ff;
+  font-size: 13px;
+  margin-bottom: 20px;
+  background: #11151b;
+}
 
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
+h1 {
+  font-size: clamp(34px, 7vw, 58px);
+  line-height: 1.08;
+  margin-bottom: 18px;
+}
 
-    .field {
-      margin-bottom: 20px;
-    }
+.hero p {
+  color: #9ba5af;
+  max-width: 680px;
+  margin: auto;
+  font-size: 17px;
+}
 
-    input,
-    textarea {
-      width: 100%;
-      background: #0c1014;
-      color: #ffffff;
-      border: 1px solid #303943;
-      border-radius: 10px;
-      padding: 14px;
-      font-size: 16px;
-      outline: none;
-    }
+/* FORM */
 
-    textarea {
-      min-height: 105px;
-      resize: vertical;
-    }
+.card {
+  background: #12161b;
+  border: 1px solid #283039;
+  border-radius: 18px;
+  padding: 25px;
+  margin: 25px 0;
+}
 
-    input:focus,
-    textarea:focus {
-      border-color: #6ee7ff;
-    }
+.field {
+  margin-bottom: 20px;
+}
 
-    button {
-      width: 100%;
-      padding: 15px;
-      border: 0;
-      border-radius: 10px;
-      background: #6ee7ff;
-      color: #071014;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 9px;
+}
 
-    button:hover {
-      opacity: 0.9;
-    }
+input,
+textarea {
+  width: 100%;
+  background: #0c1014;
+  color: #ffffff;
+  border: 1px solid #303943;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 16px;
+  outline: none;
+}
 
-    .loading {
-      display: none;
-      text-align: center;
-      padding: 25px;
-      color: #6ee7ff;
-    }
+input:focus,
+textarea:focus {
+  border-color: #6ee7ff;
+}
 
-    .results {
-      display: none;
-    }
+textarea {
+  min-height: 105px;
+  resize: vertical;
+}
 
-    .result-title {
-      color: #6ee7ff;
-      margin-bottom: 10px;
-    }
+button {
+  width: 100%;
+  padding: 15px;
+  border: 0;
+  border-radius: 10px;
+  background: #6e8cff;
+  color: #071014;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
 
-    .solution {
-      font-size: 18px;
-      color: #e9eef2;
-    }
+button:hover {
+  opacity: .9;
+}
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
-      margin-top: 20px;
-    }
+.secondary {
+  background: transparent;
+  color: #6ee7ff;
+  border: 1px solid #303943;
+}
 
-    .result-box {
-      background: #0d1115;
-      border: 1px solid #283039;
-      border-radius: 14px;
-      padding: 20px;
-    }
+/* LOADING */
 
-    .result-box h3 {
-      margin-bottom: 12px;
-      color: #ffffff;
-    }
+.loading {
+  display: none;
+  text-align: center;
+  padding: 30px;
+  color: #6ee7ff;
+}
 
-    ul,
-    ol {
-      padding-left: 20px;
-      color: #b9c2ca;
-    }
+.loading.show {
+  display: block;
+}
 
-    li {
-      margin-bottom: 7px;
-    }
+/* RESULTS */
 
-    .wide {
-      grid-column: 1 / -1;
-    }
+.results {
+  display: none;
+}
 
-    .secondary {
-      margin-top: 12px;
-      background: transparent;
-      color: #6ee7ff;
-      border: 1px solid #303943;
-    }
+.results.show {
+  display: block;
+}
 
-    footer {
-      text-align: center;
-      padding: 35px 0;
-      color: #68727c;
-      font-size: 13px;
-    }
+.result-box {
+  background: #10151b;
+  border: 1px solid #283039;
+  border-radius: 16px;
+  padding: 24px;
+  margin: 18px 0;
+}
 
-    @media (max-width: 700px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
+.result-box h2 {
+  margin-bottom: 12px;
+  font-size: 23px;
+}
 
-      .wide {
-        grid-column: auto;
-      }
+.result-box h3 {
+  margin-bottom: 12px;
+  color: #ffffff;
+}
 
-      .hero {
-        padding-top: 35px;
-      }
-    }
-  </style>
+.result-box p {
+  color: #aab3bd;
+  font-size: 17px;
+}
+
+.result-box ul,
+.result-box ol {
+  padding-left: 22px;
+  color: #b9c2ca;
+}
+
+.result-box li {
+  margin-bottom: 8px;
+}
+
+.result-title {
+  color: #6ee7ff;
+  margin-bottom: 10px;
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1d263f;
+  border-radius: 12px;
+  font-size: 23px;
+  margin-bottom: 16px;
+}
+
+.solution {
+  font-size: 18px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+/* ACTIONS */
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin: 25px 0;
+}
+
+/* FOOTER */
+
+footer {
+  text-align: center;
+  padding: 35px 0;
+  color: #68727c;
+  font-size: 13px;
+}
+
+footer span {
+  color: #6e8cff;
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .wide {
+    grid-column: auto;
+  }
+
+  .actions {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    padding-top: 35px;
+  }
+
+  .hero p {
+    font-size: 16px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <header>
-    <div class="container">
-      <div class="brand">
-        <span>AI</span>craftify
-      </div>
+<header>
+  <div class="container">
+    <div class="brand">
+      <span>AI</span>craftify
     </div>
-  </header>
+  </div>
+</header>
 
-  <main class="container">
+<main class="container">
 
-    <section class="hero">
-     
+<section class="hero">
+
+  <div class="badge">
+    ● Demo Mode • Rule-Based Generator • No Paid API
+  </div>
+
+  <h1>
+    Describe your idea.<br>
+    Get an instant concept.
+  </h1>
+
+  <p>
+    Fill in three quick details about a business problem,
+    and this tool will assemble a starter concept:
+    a solution idea, core features, target audience,
+    suggested technology, an earning model, and a simple roadmap.
+  </p>
+
+</section>
+
+
+<section class="card">
+
+<form id="ideaForm">
+
+  <div class="field">
+    <label for="businessType">
+      1. Business type
+    </label>
+
+    <input
+      id="businessType"
+      type="text"
+      placeholder="e.g. local bakery, tutoring service, online store"
+    >
+  </div>
+
+
+  <div class="field">
+    <label for="problem">
+      2. Problem you want to solve
+    </label>
+
+    <textarea
+      id="problem"
+      placeholder="e.g. customers struggle to find the right products"
+    ></textarea>
+  </div>
+
+
+  <div class="field">
+    <label for="customers">
+      3. Target customers
+    </label>
+
+    <input
+      id="customers"
+      type="text"
+      placeholder="e.g. busy parents, small shop owners, young shoppers"
+    >
+  </div>
+
+
+  <button type="submit">
+    Generate Idea
+  </button>
+
+</form>
+
+</section>
+
+
+<div id="loadingPanel" class="loading">
+  ⚡ Generating your business concept...
+</div>
+
+
+<section id="resultsPanel" class="results">
+
+  <div class="result-box wide">
+
+    <div class="icon">⚡</div>
+
+    <h2 class="result-title">
+      AI Solution Idea
+    </h2>
+
+    <p id="resSolution" class="solution"></p>
+
+  </div>
+
+
+  <div class="grid">
+
+    <div class="result-box">
+
+      <div class="icon">◉</div>
+
+      <h3>
+        Main Features
+      </h3>
+
+      <ul id="resFeatures"></ul>
+
+    </div>
+
+
+    <div class="result-box">
+
+      <div class="icon">★</div>
+
+      <h3>
+        Target Audience
+      </h3>
+
+      <p id="resAudience"></p>
+
+    </div>
+
+
+    <div class="result-box">
+
+      <div class="icon">&lt;/&gt;</div>
+
+      <h3>
+        Suggested Technology
+      </h3>
+
+      <ul id="resTech"></ul>
+
+    </div>
+
+
+    <div class="result-box">
+
+      <div class="icon">$</div>
+
+      <h3>
+        Possible Earning Model
+      </h3>
+
+      <ul id="resEarning"></ul>
+
+    </div>
+
+
+    <div class="result-box wide">
+
+      <div class="icon">⌛</div>
+
+      <h3>
+        Simple Development Roadmap
+      </h3>
+
+      <ol id="resRoadmap"></ol>
+
+    </div>
+
+  </div>
+
+
+  <div class="actions">
+
+    <button
+      id="regenerateBtn"
+      type="button"
+    >
+      Generate Another Version
+    </button>
+
+    <button
+      id="newIdeaBtn"
+      type="button"
+      class="secondary"
+    >
+      Start a New Idea
+    </button>
+
+  </div>
+
+</section>
+
+</main>
+
+
+<footer>
+  Part of <span>TheAIcraftify</span> — Project 01
+</footer>
+
+
+<script>
+
+const form = document.getElementById("ideaForm");
+
+const businessType =
+  document.getElementById("businessType");
+
+const problem =
+  document.getElementById("problem");
+
+const customers =
+  document.getElementById("customers");
+
+const loadingPanel =
+  document.getElementById("loadingPanel");
+
+const resultsPanel =
+  document.getElementById("resultsPanel");
+
+const resSolution =
+  document.getElementById("resSolution");
+
+const resFeatures =
+  document.getElementById("resFeatures");
+
+const resAudience =
+  document.getElementById("resAudience");
+
+const resTech =
+  document.getElementById("resTech");
+
+const resEarning =
+  document.getElementById("resEarning");
+
+const resRoadmap =
+  document.getElementById("resRoadmap");
+
+const regenerateBtn =
+  document.getElementById("regenerateBtn");
+
+const newIdeaBtn =
+  document.getElementById("newIdeaBtn");
+
+
+function showList(element, items) {
+
+  element.innerHTML = "";
+
+  items.forEach(function(item) {
+
+    const li = document.createElement("li");
+
+    li.textContent = item;
+
+    element.appendChild(li);
+
+  });
+
+}
+
+
+function makeIdea(type, problemText, customerText) {
+
+  const typeLower = type.toLowerCase();
+
+
+  let features = [
+    "Simple dashboard for managing the business",
+    "Easy management of important daily activities",
+    "Customer-friendly interface",
+    "Automatic reminders and follow-ups",
+    "Simple reports to track performance"
+  ];
+
+
+  let technology = [
+    "HTML, CSS and JavaScript",
+    "Responsive design for mobile and desktop",
+    "Local storage for basic data saving",
+    "GitHub Pages for free hosting"
+  ];
+
+
+  let earning = [
+    "Offer the solution as a paid service",
+    "Freemium model with optional premium features",
+    "Monthly subscription for advanced tools"
+  ];
+
+
+  let roadmap = [
+    "Define the main workflow for the business",
+    "Build the basic interface in HTML and CSS",
+    "Add JavaScript functionality",
+    "Test the solution with real business examples",
+    "Add data storage and advanced features",
+    "Deploy the working version online"
+  ];
+
+
+  if (
+    typeLower.includes("restaurant") ||
+    typeLower.includes("cafe") ||
+    typeLower.includes("food") ||
+    typeLower.includes("bakery") ||
+    typeLower.includes("catering")
+  ) {
+
+    features = [
+      "Digital menu and product management",
+      "Order and customer management",
+      "Order status and follow-up system",
+      "Daily sales summary",
+      "Customer history and repeat-order tracking"
+    ];
+
+  }
+
+
+  else if (
+    typeLower.includes("school") ||
+    typeLower.includes("academy") ||
+    typeLower.includes("tutor") ||
+    typeLower.includes("education") ||
+    typeLower.includes("coaching")
+  ) {
+
+    features = [
+      "Student and teacher management",
+      "Attendance tracking",
+      "Class and timetable management",
+      "Fee and payment reminders",
+      "Progress and performance reports"
+    ];
+
+  }
+
+
+  else if (
+    typeLower.includes("hospital") ||
+    typeLower.includes("clinic") ||
+    typeLower.includes("doctor") ||
+    typeLower.includes("medical")
+  ) {
+
+    features = [
+      "Patient information management",
+      "Appointment scheduling",
+      "Automatic appointment reminders",
+      "Patient history",
+      "Simple daily activity dashboard"
+    ];
+
+  }
+
+
+  else if (
+    typeLower.includes("salon") ||
+    typeLower.includes("beauty") ||
+    typeLower.includes("spa") ||
+    typeLower.includes("barber")
+  ) {
+
+    features = [
+      "Appointment booking",
+      "Customer profile management",
+      "Service and price management",
+      "Automatic appointment reminders",
+      "Sales and customer history"
+    ];
+
+  }
+
+
+  else if (
+    typeLower.includes("shop") ||
+    typeLower.includes("store") ||
+    typeLower.includes("retail")
+  ) {
+
+    features = [
+      "Product and inventory management",
+      "Customer management",
+      "Sales tracking",
+      "Low-stock reminders",
+      "Daily and monthly sales reports"
+    ];
+
+  }
+
+
+  else if (
+    typeLower.includes("real estate") ||
+    typeLower.includes("property")
+  ) {
+
+    features = [
+      "Property listing management",
+      "Customer inquiry tracking",
+      "Property search and filtering",
+      "Viewing appointment management",
+      "Lead and follow-up reminders"
+    ];
+
+  }
+
+
+  else if (
+    typeLower.includes("travel") ||
+    typeLower.includes("tour") ||
+    typeLower.includes("tourism")
+  ) {
+
+    features = [
+      "Trip and package management",
+      "Customer booking management",
+      "Travel itinerary creation",
+      "Payment and booking tracking",
+      "Customer follow-up reminders"
+    ];
+
+  }
+
+
+  else if (
+    typeLower.includes("gym") ||
+    typeLower.includes("fitness")
+  ) {
+
+    features = [
+      "Member management",
+      "Membership expiry reminders",
+      "Workout and progress tracking",
+      "Payment tracking",
+      "Member attendance history"
+    ];
+
+  }
+
+
+  else if (
+    typeLower.includes("freelance") ||
+    typeLower.includes("agency") ||
+    typeLower.includes("consult")
+  ) {
+
+    features = [
+      "Client management",
+      "Project and task tracking",
+      "Deadline reminders",
+      "Invoice and payment tracking",
+      "Client communication history"
+    ];
+
+  }
+
+
+  const solution =
+    "A smart digital solution for " +
+    type +
+    " that helps solve \"" +
+    problemText +
+    "\" and makes the business easier to manage.";
+
+
+  const audience =
+    "Primarily " +
+    customerText +
+    ", especially people who regularly deal with \"" +
+    problemText +
+    "\".";
+
+
+  return {
+    solution: solution,
+    features: features,
+    audience: audience,
+    technology: technology,
+    earning: earning,
+    roadmap: roadmap
+  };
+
+}
+
+
+function generateIdea() {
+
+  const type =
+    businessType.value.trim();
+
+  const problemText =
+    problem.value.trim();
+
+  const customerText =
+    customers.value.trim();
+
+
+  if (!type || !problemText || !customerText) {
+
+    alert(
+      "Please fill in all three fields first."
+    );
+
+    return;
+
+  }
+
+
+  loadingPanel.classList.add("show");
+
+  resultsPanel.classList.remove("show");
+
+
+  setTimeout(function() {
+
+    const idea =
+      makeIdea(
+        type,
+        problemText,
+        customerText
+      );
+
+
+    resSolution.textContent =
+      idea.solution;
+
+    resAudience.textContent =
+      idea.audience;
+
+
+    showList(
+      resFeatures,
+      idea.features
+    );
+
+
+    showList(
+      resTech,
+      idea.technology
+    );
+
+
+    showList(
+      resEarning,
+      idea.earning
+    );
+
+
+    showList(
+      resRoadmap,
+      idea.roadmap
+    );
+
+
+    loadingPanel.classList.remove("show");
+
+    resultsPanel.classList.add("show");
+
+
+    resultsPanel.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+  }, 700);
+
+}
+
+
+form.addEventListener(
+  "submit",
+  function(event) {
+
+    event.preventDefault();
+
+    generateIdea();
+
+  }
+);
+
+
+regenerateBtn.addEventListener(
+  "click",
+  function() {
+
+    generateIdea();
+
+  }
+);
+
+
+newIdeaBtn.addEventListener(
+  "click",
+  function() {
+
+    form.reset();
+
+    resultsPanel.classList.remove("show");
+
+    loadingPanel.classList.remove("show");
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+  }
+);
+
+</script>
+
+</body>
+</html>
